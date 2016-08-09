@@ -28,4 +28,6 @@ SAT_returnState hk_crt_pkt_TM(tc_tm_pkt *pkt, const TC_TM_app_id app_id, const H
 
 SAT_returnState hk_crt_empty_pkt_TM(tc_tm_pkt **pkt, const TC_TM_app_id app_id, const HK_struct_id sid);
 
+SAT_returnState hk_crt_pkt_TC_DBG(tc_tm_pkt *pkt, const TC_TM_app_id app_id, const HK_struct_id sid);
+
 #endif

@@ -78,7 +78,28 @@ void hk_SCH() {
     HAL_sys_delay(1000);
 
     wdg_reset_HK();
-    HAL_sys_delay(12500);
+    //HAL_sys_delay(12500);
+
+    //DEBUG for ecss stats
+    hk_crt_pkt_TC_DBG(&hk_pkt, ADCS_APP_ID, ECSS_STATS_REP);
+    route_pkt(&hk_pkt);
+    wake_uart_task();
+    HAL_sys_delay(1000);
+
+    hk_crt_pkt_TC_DBG(&hk_pkt, COMMS_APP_ID, ECSS_STATS_REP);
+    route_pkt(&hk_pkt);
+    wake_uart_task();
+    HAL_sys_delay(1000);
+
+    hk_crt_pkt_TC_DBG(&hk_pkt, EPS_APP_ID, ECSS_STATS_REP);
+    route_pkt(&hk_pkt);
+    wake_uart_task();
+    HAL_sys_delay(1000);
+
+    hk_crt_pkt_TM(&hk_pkt, DBG_APP_ID, ECSS_STATS_REP);
+    route_pkt(&hk_pkt);
+    wake_uart_task();
+    HAL_sys_delay(9500);
 
     wdg_reset_HK();
     HAL_sys_delay(12500);  

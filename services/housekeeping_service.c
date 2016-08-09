@@ -70,3 +70,15 @@ SAT_returnState hk_crt_pkt_TM(tc_tm_pkt *pkt, const TC_TM_app_id app_id, const H
 
     return SATR_OK;
 }
+
+SAT_returnState hk_crt_pkt_TC_DBG(tc_tm_pkt *pkt, const TC_TM_app_id app_id, const HK_struct_id sid) {
+
+    if(!C_ASSERT(app_id < LAST_APP_ID) == true)  { return SATR_ERROR; }
+
+    crt_pkt(pkt, app_id, TC, TC_ACK_NO, TC_HOUSEKEEPING_SERVICE, TC_HK_REPORT_PARAMETERS, (TC_TM_app_id)DBG_APP_ID);
+
+    pkt->data[0] = (char)sid;
+    pkt->len = 1;
+
+    return SATR_OK;
+}
