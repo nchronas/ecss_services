@@ -20,6 +20,19 @@
 #define UART_BUF_SIZE 4096 /*(POOL_PKT_EXT*2)*/
 #endif
 
+#define PKT_TIMEOUT 60000 /*in mseconds*/
+#define PKT_NORMAL  198   /*MAX_PKT_DATA*/
+
+#if (SYSTEM_APP_ID == _EPS_APP_ID_)
+#define POOL_PKT_SIZE        10
+#define POOL_PKT_EXT_SIZE     0
+#define POOL_PKT_TOTAL_SIZE  10
+#else
+#define POOL_PKT_SIZE        16
+#define POOL_PKT_EXT_SIZE     4
+#define POOL_PKT_TOTAL_SIZE  20
+#endif
+
 /*cubesat subsystem's timeouts*/
 #define TIMEOUT_V_COMMS     5000
 #define TIMEOUT_V_ADCS      5000
@@ -37,7 +50,7 @@ struct adcs_data{
     int16_t yawdot;
     int16_t x_eci;
     int16_t y_eci;
-    int16_t z_eci;    
+    int16_t z_eci;
 };
 
 struct uart_data {
