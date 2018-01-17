@@ -5,118 +5,48 @@
 #undef __FILE_ID__
 #define __FILE_ID__ 5
 
+
+typedef struct {
+    /* packet id */
+    //uint8_t ver; /* 3 bits, should be equal to 0 */
+
+    //uint8_t data_field_hdr; /* 1 bit, data_field_hdr exists in data = 1 */
+    TC_TM_app_id app_id; /* TM: app id = 0 for time packets, = 0xff for idle packets. should be 11 bits only 8 are used though */
+    uint8_t type; /* 1 bit, tm = 0, tc = 1 */
+
+    /* packet sequence control */
+    uint8_t seq_flags; /* 3 bits, definition in TC_SEQ_xPACKET */
+    uint16_t seq_count; /* 14 bits, packet counter, should be unique for each app id */
+
+    uint16_t len; /* 16 bits, C = (Number of octets in packet data field) - 1, on struct is the size of data without the headers. on array is with the headers */
+
+    uint8_t ack; /* 4 bits, definition in TC_ACK_xxxx 0 if its a TM */
+    uint8_t ser_type; /* 8 bit, service type */
+    uint8_t ser_subtype; /* 8 bit, service subtype */
+
+    /*optional*/
+    //uint8_t pckt_sub_cnt; /* 8 bits*/
+    TC_TM_app_id dest_id;   /*on TC is the source id, on TM its the destination id*/
+
+    uint8_t *data; /* pkt data */
+
+    /*this is not part of the header. it is used from the software and the verification service,
+     *when the packet wants ACK.
+     *the type is SAT_returnState and it either stores R_OK or has the error code (failure reason).
+     *it is initialized as R_ERROR and the service should be responsible to make it R_OK or put the corresponding error.
+     */
+    SAT_returnState verification_state;
+/*  uint8_t padding;  x bits, padding for word alligment */
+
+//  uint16_t crc; /* CRC or checksum, mission specific*/
+}tc_tm_pkt;
+
 struct _pkt_state {
     uint8_t seq_cnt[LAST_APP_ID];
 };
 
 static struct _pkt_state pkt_state;
 
-// need to check endiannes
-void cnv32_8(const uint32_t from, uint8_t *to) {
-
-    union _cnv cnv;
-
-    cnv.cnv32 = from;
-    to[0] = cnv.cnv8[0];
-    to[1] = cnv.cnv8[1];
-    to[2] = cnv.cnv8[2];
-    to[3] = cnv.cnv8[3];
-}
-
-void cnv16_8(const uint16_t from, uint8_t *to) {
-
-    union _cnv cnv;
-
-    cnv.cnv16[0] = from;
-    to[0] = cnv.cnv8[0];
-    to[1] = cnv.cnv8[1];
-
-}
-
-void cnv8_32(uint8_t *from, uint32_t *to) {
-
-    union _cnv cnv;
-
-    cnv.cnv8[3] = from[3];
-    cnv.cnv8[2] = from[2];
-    cnv.cnv8[1] = from[1];
-    cnv.cnv8[0] = from[0];
-    *to = cnv.cnv32;
-
-}
-
-void cnv8_16LE(uint8_t *from, uint16_t *to) {
-
-    union _cnv cnv;
-
-    cnv.cnv8[1] = from[1];
-    cnv.cnv8[0] = from[0];
-    *to = cnv.cnv16[0];
-}
-
-void cnv8_16(uint8_t *from, uint16_t *to) {
-
-    union _cnv cnv;
-
-    cnv.cnv8[1] = from[0];
-    cnv.cnv8[0] = from[1];
-    *to = cnv.cnv16[0];
-}
-
-
-void cnvF_8(const float from, uint8_t *to) {
-
-    union _cnv cnv;
-
-    cnv.cnvF = from;
-    to[0] = cnv.cnv8[0];
-    to[1] = cnv.cnv8[1];
-    to[2] = cnv.cnv8[2];
-    to[3] = cnv.cnv8[3];
-}
-
-void cnv8_F(uint8_t *from, float *to) {
-
-    union _cnv cnv;
-
-    cnv.cnv8[3] = from[3];
-    cnv.cnv8[2] = from[2];
-    cnv.cnv8[1] = from[1];
-    cnv.cnv8[0] = from[0];
-    *to = cnv.cnvF;
-
-}
-
-void cnvD_8(const double from, uint8_t *to) {
-
-    union _cnv cnv;
-
-    cnv.cnvD = from;
-    to[0] = cnv.cnv8[0];
-    to[1] = cnv.cnv8[1];
-    to[2] = cnv.cnv8[2];
-    to[3] = cnv.cnv8[3];
-    to[4] = cnv.cnv8[4];
-    to[5] = cnv.cnv8[5];
-    to[6] = cnv.cnv8[6];
-    to[7] = cnv.cnv8[7];
-}
-
-void cnv8_D(uint8_t *from, double *to) {
-
-    union _cnv cnv;
-
-    cnv.cnv8[7] = from[7];
-    cnv.cnv8[6] = from[6];
-    cnv.cnv8[5] = from[5];
-    cnv.cnv8[4] = from[4];
-    cnv.cnv8[3] = from[3];
-    cnv.cnv8[2] = from[2];
-    cnv.cnv8[1] = from[1];
-    cnv.cnv8[0] = from[0];
-    *to = cnv.cnvD;
-
-}
 
 SAT_returnState checkSum(const uint8_t *data, const uint16_t size, uint8_t *res_crc) {
 
@@ -175,34 +105,34 @@ SAT_returnState unpack_pkt(const uint8_t *buf, tc_tm_pkt *pkt, const uint16_t si
                  pkt->dest_id < LAST_APP_ID &&
                  pkt->app_id != pkt->dest_id) == true) {
         pkt->verification_state = SATR_PKT_ILLEGAL_APPID;
-        return SATR_PKT_ILLEGAL_APPID; 
+        return SATR_PKT_ILLEGAL_APPID;
     }
 
     if(!C_ASSERT(pkt->len == size - ECSS_HEADER_SIZE - 1) == true) {
         pkt->verification_state = SATR_PKT_INV_LEN;
-        return SATR_PKT_INV_LEN; 
+        return SATR_PKT_INV_LEN;
     }
     pkt->len = pkt->len - ECSS_DATA_HEADER_SIZE - ECSS_CRC_SIZE + 1;
 
     if(!C_ASSERT(tmp_crc[0] == tmp_crc[1]) == true) {
         pkt->verification_state = SATR_PKT_INC_CRC;
-        return SATR_PKT_INC_CRC; 
+        return SATR_PKT_INC_CRC;
     }
 
-    if(!C_ASSERT(pkt->ser_type < MAX_SERVICES && pkt->ser_subtype < MAX_SUBTYPES && pkt->type <= TC) == true) { 
+    if(!C_ASSERT(pkt->ser_type < MAX_SERVICES && pkt->ser_subtype < MAX_SUBTYPES && pkt->type <= TC) == true) {
         pkt->verification_state = SATR_PKT_ILLEGAL_PKT_TP;
-        return SATR_PKT_ILLEGAL_PKT_TP; 
+        return SATR_PKT_ILLEGAL_PKT_TP;
     }
 
-    if(!C_ASSERT(services_verification_TC_TM[pkt->ser_type][pkt->ser_subtype][pkt->type] == 1) == true) { 
+    if(!C_ASSERT(services_verification_TC_TM[pkt->ser_type][pkt->ser_subtype][pkt->type] == 1) == true) {
         pkt->verification_state = SATR_PKT_ILLEGAL_PKT_TP;
         SYSVIEW_PRINT("INV TP %u,%u,%u,%u,%u", pkt->type, pkt->app_id, pkt->dest_id, pkt->ser_type, pkt->ser_subtype);
-        return SATR_PKT_ILLEGAL_PKT_TP; 
+        return SATR_PKT_ILLEGAL_PKT_TP;
     }
 
     if(!C_ASSERT(ver == ECSS_VER_NUMBER) == true) {
         pkt->verification_state = SATR_ERROR;
-        return SATR_ERROR; 
+        return SATR_ERROR;
     }
 
     if(!C_ASSERT(tc_pus == ECSS_PUS_VER) == true) {
@@ -239,7 +169,7 @@ SAT_returnState unpack_pkt(const uint8_t *buf, tc_tm_pkt *pkt, const uint16_t si
     //if(!C_ASSERT(pkt->len == pkt_size[app_id][type][subtype][generic] == true) {
     //    pkt->verification_state = SATR_ERROR;
     //    return SATR_ERROR;
-    //}    
+    //}
 
     for(int i = 0; i < pkt->len; i++) {
         pkt->data[i] = buf[ECSS_DATA_OFFSET+i];
