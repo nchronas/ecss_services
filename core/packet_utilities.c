@@ -1,3 +1,4 @@
+#include "packet_utilities.h"
 
 // need to check endiannes
 void cnv32_8(const uint32_t from, uint8_t *to) {

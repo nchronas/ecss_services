@@ -1,3 +1,15 @@
+#ifndef __PACKET_UTILITIES_H
+#define __PACKET_UTILITIES_H
+
+#include <stdint.h>
+
+union _cnv {
+    double cnvD;
+    float cnvF;
+    uint32_t cnv32;
+    uint16_t cnv16[4];
+    uint8_t cnv8[8];
+};
 
 void cnv32_8(const uint32_t from, uint8_t *to);
 
@@ -19,3 +31,5 @@ void cnv8_D(uint8_t *from, double *to);
 
 uint16_t htons(uint16_t x);
 uint16_t ntohs(uint16_t x);
+
+#endif
