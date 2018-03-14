@@ -1,8 +1,8 @@
 #ifndef TEST_SERVICE_H
 #define TEST_SERVICE_H
 
-#include "services.h"
-
+#include "satellite.h"
+#include "packet_services.h"
 
 SAT_returnState test_app(tc_tm_pkt *pkt);
 
