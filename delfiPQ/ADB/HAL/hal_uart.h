@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <satellite.h>
 
+//extern UART_Handle uart_dbg_bus;
+
 SAT_returnState HAL_uart_rx(dev_id id, uint8_t *buf, uint16_t *size);
 
 void HAL_uart_tx(dev_id id, uint8_t *buf, uint16_t size);

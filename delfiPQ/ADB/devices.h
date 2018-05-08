@@ -4,22 +4,6 @@
 #include "satellite.h"
 #include "stdint.h"
 
-struct ina_array {
-  bool enabled;
-  int16_t current[5];
-
-  uint8_t number_of_data;
-  uint8_t data_counter;
-};
-
-struct ina_average {
-  bool enabled;
-  int16_t av[5];
-
-  uint8_t number_of_averages;
-  uint8_t average_counter;
-};
-
 struct ina_device {
   dev_id id;
   float current;
@@ -39,13 +23,6 @@ struct tmp_device {
   uint8_t resolution;
   int32_t temp;
   uint16_t mul;
-};
-
-struct fram_device {
-  dev_id id;
-  uint16_t address;
-  uint8_t *buffer;
-  size_t count;
 };
 
 void device_init();

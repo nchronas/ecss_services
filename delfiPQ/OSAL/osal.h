@@ -6,7 +6,7 @@
 
 void OSAL_wake_uart_task();
 
-void OSAL__sys_delay(uint32_t sec);
+void OSAL_sys_delay(uint32_t usec);
 
 uint32_t OSAL_sys_GetTick();
 

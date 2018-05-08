@@ -1,7 +1,8 @@
 #ifndef __HOUSEKEEPING_SERVICE_H
 #define __HOUSEKEEPING_SERVICE_H
 
-#include "services.h"
+#include "satellite.h"
+#include "packet_services.h"
 
 #define OBC_EXT_WOD_SIZE      50
 #define OBC_EXT_WOD_OFFSET     1

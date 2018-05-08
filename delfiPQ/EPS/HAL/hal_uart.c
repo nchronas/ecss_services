@@ -8,7 +8,7 @@
 #include <ti/drivers/I2C.h>
 
 static UART_Handle uart_pq9_bus;
-static UART_Handle uart_dbg_bus;
+UART_Handle uart_dbg_bus;
 static I2C_Handle i2c_brd;
 static I2C_Handle i2c_batt;
 static I2C_Handle i2c_sol;
@@ -19,7 +19,7 @@ void HAL_access_device_peripheral(dev_id id, void ** handle) {
   if(id == EPS_BUS_DEV_ID) {
     *handle = &uart_pq9_bus;
   } else if(id == EPS_DBG_DEV_ID) {
-    *handle = &uart_dbg_bus;
+    //*handle = &uart_dbg_bus;
   } else if(id == EPS_OBC_MON_DEV_ID ||
             id == EPS_COMMS_MON_DEV_ID ||
             id == EPS_ADCS_MON_DEV_ID ||
@@ -142,9 +142,9 @@ SAT_returnState HAL_SPI_readWrite(dev_id id,
   spiTransaction.txBuf = (void *)writeBuf;
   spiTransaction.rxBuf = (void *)readBuf;
 
-  GPIO_write(*cs, 0);
+  GPIO_write(FRAM_CS, 0);
   SPI_transfer(*spi, &spiTransaction);
-  GPIO_write(*cs, 1);
+  GPIO_write(FRAM_CS, 1);
 
   return SATR_OK;
 }
@@ -161,6 +161,8 @@ SAT_returnState HAL_I2C_readWrite(dev_id id,
 
   HAL_access_device_peripheral(id, &i2c);
   HAL_access_device_peripheral_meta(id, &i2c_add);
+
+  if(*i2c == NULL) { return SATR_ERROR; }
 
   i2cTransaction.slaveAddress = i2c_add;
   i2cTransaction.writeBuf = writeBuf;

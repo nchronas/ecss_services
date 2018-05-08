@@ -23,6 +23,7 @@
 typedef enum {
     EPS_APP_ID      = _EPS_APP_ID_,
     COMMS_APP_ID    = _COMMS_APP_ID_,
+    ADB_APP_ID      = _ADB_APP_ID_,
     GND_APP_ID      = _GND_APP_ID_,
     DBG_APP_ID      = _DBG_APP_ID_,
     LAST_APP_ID     = _LAST_APP_ID_
@@ -54,7 +55,9 @@ typedef enum {
     SOL_XM_TEMP_DEV_ID      = 23,
     BATT_CHARGE_DEV_ID      = 24,
     EPS_FRAM_DEV_ID         = 25,
-    LAST_DEV_ID             = 26
+    ADB_MON_DEV_ID          = 26,
+    ADB_TEMP_DEV_ID         = 27,
+    LAST_DEV_ID             = 28
 }dev_id;
 
 typedef enum {
@@ -75,18 +78,6 @@ typedef enum {
     TEST_MON_ID             =  0,
     LAST_MON_ID             =  1
 }mon_id;
-
-typedef enum {
-  int8_t_DID               =  0,
-  int16_t_DID              =  1,
-  int32_t_DID              =  2,
-  uint8_t_DID              =  3,
-  uint16_t_DID             =  4,
-  uint32_t_DID             =  5,
-  float_DID                =  6,
-  double_DID               =  7,
-  LAST_DID                 =  8
-}atmos_datatypes;
 
 typedef enum {
     SATR_PKT_ILLEGAL_APPID     = 0,
@@ -110,5 +101,10 @@ typedef enum {
     /*LAST*/
     SATR_LAST                  = 18
 }SAT_returnState;
+
+typedef enum {
+    HEALTH_REP      = 1,
+    LAST_STRUCT_ID  = 2
+}HK_struct_id;
 
 #endif

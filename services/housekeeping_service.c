@@ -1,12 +1,10 @@
 #include "housekeeping_service.h"
 
-#include "service_utilities.h"
+#include "packet_utilities.h"
 #include "pkt_pool.h"
 #include "housekeeping.h"
+#include "satellite.h"
 #include <stdint.h>
-
-#undef __FILE_ID__
-#define __FILE_ID__ 9
 
 extern SAT_returnState route_pkt(tc_tm_pkt *pkt);
 
