@@ -1,5 +1,9 @@
 #include "pkt_pool.h"
+
+#include <stddef.h>
 #include "sysview.h"
+#include "satellite.h"
+#include "packet_engine.h"
 
 #undef __FILE_ID__
 #define __FILE_ID__ 35
@@ -28,7 +32,7 @@ tc_tm_pkt * get_pkt(const uint16_t size) {
             if(pkt_pool.free[i] == true) {
                 traceGET_PKT(i);
                 pkt_pool.free[i] = false;
-                pkt_pool.time[i] = HAL_sys_GetTick();
+                pkt_pool.time[i] = OSAL_sys_GetTick();
                 pkt_pool.pkt[i].verification_state = SATR_PKT_INIT;
                 return &pkt_pool.pkt[i];
             }
@@ -38,7 +42,7 @@ tc_tm_pkt * get_pkt(const uint16_t size) {
             if(pkt_pool.free_ext[i] == true) {
                 traceGET_PKT(i + POOL_PKT_SIZE);
                 pkt_pool.free_ext[i] = false;
-                pkt_pool.time_ext[i] = HAL_sys_GetTick();
+                pkt_pool.time_ext[i] = OSAL_sys_GetTick();
                 pkt_pool.pkt_ext[i].verification_state = SATR_PKT_INIT;
                 return &pkt_pool.pkt_ext[i];
             }

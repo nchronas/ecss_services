@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 #include "services.h"
+#include "satellite.h"
+#include "packet_services.h"
 
 SAT_returnState queuePush(tc_tm_pkt *pkt, TC_TM_app_id app_id);
 

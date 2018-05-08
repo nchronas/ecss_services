@@ -2,8 +2,7 @@
 #define __PKT_POOL_H
 
 #include <stdint.h>
-#include "services.h"
-#include "system.h"
+#include "packet_services.h"
 
 tc_tm_pkt * get_pkt(uint16_t size);
 

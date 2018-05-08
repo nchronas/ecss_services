@@ -1,45 +1,14 @@
-#include "service_utilities.h"
-#include "time_management_service.h"
-#include "sysview.h"
+#include "packet_services.h"
+
+#include <stdbool.h>
+#include <stddef.h>
+#include "packet_utilities.h"
+#include "satellite.h"
+#include "packet_engine.h"
+#include "subsystem.h"
 
 #undef __FILE_ID__
 #define __FILE_ID__ 5
-
-
-typedef struct {
-    /* packet id */
-    //uint8_t ver; /* 3 bits, should be equal to 0 */
-
-    //uint8_t data_field_hdr; /* 1 bit, data_field_hdr exists in data = 1 */
-    TC_TM_app_id app_id; /* TM: app id = 0 for time packets, = 0xff for idle packets. should be 11 bits only 8 are used though */
-    uint8_t type; /* 1 bit, tm = 0, tc = 1 */
-
-    /* packet sequence control */
-    uint8_t seq_flags; /* 3 bits, definition in TC_SEQ_xPACKET */
-    uint16_t seq_count; /* 14 bits, packet counter, should be unique for each app id */
-
-    uint16_t len; /* 16 bits, C = (Number of octets in packet data field) - 1, on struct is the size of data without the headers. on array is with the headers */
-
-    uint8_t ack; /* 4 bits, definition in TC_ACK_xxxx 0 if its a TM */
-    uint8_t ser_type; /* 8 bit, service type */
-    uint8_t ser_subtype; /* 8 bit, service subtype */
-
-    /*optional*/
-    //uint8_t pckt_sub_cnt; /* 8 bits*/
-    TC_TM_app_id dest_id;   /*on TC is the source id, on TM its the destination id*/
-
-    uint8_t *data; /* pkt data */
-
-    /*this is not part of the header. it is used from the software and the verification service,
-     *when the packet wants ACK.
-     *the type is SAT_returnState and it either stores R_OK or has the error code (failure reason).
-     *it is initialized as R_ERROR and the service should be responsible to make it R_OK or put the corresponding error.
-     */
-    SAT_returnState verification_state;
-/*  uint8_t padding;  x bits, padding for word alligment */
-
-//  uint16_t crc; /* CRC or checksum, mission specific*/
-}tc_tm_pkt;
 
 struct _pkt_state {
     uint8_t seq_cnt[LAST_APP_ID];
@@ -124,11 +93,11 @@ SAT_returnState unpack_pkt(const uint8_t *buf, tc_tm_pkt *pkt, const uint16_t si
         return SATR_PKT_ILLEGAL_PKT_TP;
     }
 
-    if(!C_ASSERT(services_verification_TC_TM[pkt->ser_type][pkt->ser_subtype][pkt->type] == 1) == true) {
-        pkt->verification_state = SATR_PKT_ILLEGAL_PKT_TP;
-        SYSVIEW_PRINT("INV TP %u,%u,%u,%u,%u", pkt->type, pkt->app_id, pkt->dest_id, pkt->ser_type, pkt->ser_subtype);
-        return SATR_PKT_ILLEGAL_PKT_TP;
-    }
+    //if(!C_ASSERT(services_verification_TC_TM[pkt->ser_type][pkt->ser_subtype][pkt->type] == 1) == true) {
+    //    pkt->verification_state = SATR_PKT_ILLEGAL_PKT_TP;
+    //    SYSVIEW_PRINT("INV TP %u,%u,%u,%u,%u", pkt->type, pkt->app_id, pkt->dest_id, pkt->ser_type, pkt->ser_subtype);
+    //    return SATR_PKT_ILLEGAL_PKT_TP;
+    //}
 
     if(!C_ASSERT(ver == ECSS_VER_NUMBER) == true) {
         pkt->verification_state = SATR_ERROR;
@@ -164,12 +133,6 @@ SAT_returnState unpack_pkt(const uint8_t *buf, tc_tm_pkt *pkt, const uint16_t si
         pkt->verification_state = SATR_ERROR;
         return SATR_ERROR;
     }
-
-    /*assertion for data size depanding on pkt type*/
-    //if(!C_ASSERT(pkt->len == pkt_size[app_id][type][subtype][generic] == true) {
-    //    pkt->verification_state = SATR_ERROR;
-    //    return SATR_ERROR;
-    //}
 
     for(int i = 0; i < pkt->len; i++) {
         pkt->data[i] = buf[ECSS_DATA_OFFSET+i];

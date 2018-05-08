@@ -1,8 +1,9 @@
 #include "test_service.h"
-#include "service_utilities.h"
-#include "pkt_pool.h"
 
 #include <stdint.h>
+#include "packet_utilities.h"
+#include "pkt_pool.h"
+#include "subsystem.h"
 
 #undef __FILE_ID__
 #define __FILE_ID__ 3
