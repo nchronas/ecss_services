@@ -3,6 +3,17 @@
 import sys
 from subprocess import call
 
+/Users/nanimo/Documents/repos/nik/ecss_services/delfiPQ/EPS
+/Users/nanimo/Documents/repos/nik/ecss_services/delfiPQ/HAL
+/Users/nanimo/Documents/repos/nik/INA226
+/Users/nanimo/Documents/repos/nik/LTC2942
+/Users/nanimo/Documents/repos/nik/MB85RS256A
+/Users/nanimo/Documents/repos/nik/TMP100
+/Users/nanimo/Documents/repos/nik/ecss_services/delfiPQ/OSAL
+/Users/nanimo/Documents/repos/nik/ecss_services/delfiPQ/
+/Users/nanimo/Documents/repos/nik/ecss_services/core
+/Users/nanimo/Documents/repos/nik/ecss_services/services
+
 #path = sys.argv[1:]
 path = "/Users/nanimo/Documents/repos/nik/"
 
