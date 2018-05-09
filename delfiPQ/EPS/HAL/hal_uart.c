@@ -74,7 +74,7 @@ HAL_access_device_peripheral_meta(dev_id id, void *value) {
     *(uint8_t*)value = 0x43;
   } else if(id == BATT_CHARGE_DEV_ID) {
     *(uint8_t*)value = 0x64;
-  } else if(id == BATT_CHARGE_DEV_ID) {
+  } else if(id == EPS_FRAM_DEV_ID) {
     *(Board_GPIOName*)value = FRAM_CS;
   }
 
@@ -236,39 +236,44 @@ void HAL_uart_tx(dev_id id, uint8_t *buf, uint16_t size) {
  *  4. Modify UARTMSP432.c, the staticFxnTable() and
  *     replace readIsrBinaryCallback with
  *     readIsrModBinaryCallback
+ *
+ *   Build using make in the ti/simplelink_msp432p4_sdk_2_10_00_14/source/ti/drivers
  */
 
-// static bool readIsrModBinaryCallback(UART_Handle handle)
-// {
-//    int                         readIn;
-//    bool                        ret = true;
-//    UARTMSP432_Object          *object = handle->object;
-//    UARTMSP432_HWAttrs const *hwAttrs = handle->hwAttrs;
-//
-//    /*
-//     * Here, we will do a quick check if another data byte has come in from
-//     * when the RX interrupt was generated. This helps us avoid (not protect)
-//     * data overruns by processing the next byte without having to wait for
-//     * another RX interrupt ISR to kick in.
-//     */
-//    while (EUSCI_A_CMSIS(hwAttrs->baseAddr)->IFG & EUSCI_A_IFG_RXIFG) {
-//        readIn = MAP_UART_receiveData(hwAttrs->baseAddr);
-//
-//        if (RingBuf_put(&object->ringBuffer, (unsigned char)readIn) == -1) {
-//            DebugP_log1("UART:(%p) Ring buffer full!!", hwAttrs->baseAddr);
-//            ret = false;
-//        }
-//
-//        if(readIn == PACKET_STOP_EVENT) {
-//          object->readCount = RingBuf_getCount(RingBuf_Handle object);
-//          object->readCallback(handle,
-//                               object->readBuf,
-//                               object->readCount);
-//        }
-//
-//    }
-//    DebugP_log2("UART:(%p) buffered '0x%02x'", hwAttrs->baseAddr,
-//        (unsigned char) readIn);
-//
-//    return (ret);
-// }
+ // #define PACKET_STOP_EVENT 0x7C
+ //
+ // static bool readIsrModBinaryCallback(UART_Handle handle)
+ // {
+ //    int                         readIn;
+ //    bool                        ret = true;
+ //    UARTMSP432_Object          *object = handle->object;
+ //    //V1 or without depanding version
+ //    UARTMSP432_HWAttrsV1 const *hwAttrs = handle->hwAttrs;
+ //
+ //    /*
+ //     * Here, we will do a quick check if another data byte has come in from
+ //     * when the RX interrupt was generated. This helps us avoid (not protect)
+ //     * data overruns by processing the next byte without having to wait for
+ //     * another RX interrupt ISR to kick in.
+ //     */
+ //    while (EUSCI_A_CMSIS(hwAttrs->baseAddr)->IFG & EUSCI_A_IFG_RXIFG) {
+ //        readIn = MAP_UART_receiveData(hwAttrs->baseAddr);
+ //
+ //        if (RingBuf_put(&object->ringBuffer, (unsigned char)readIn) == -1) {
+ //            DebugP_log1("UART:(%p) Ring buffer full!!", hwAttrs->baseAddr);
+ //            ret = false;
+ //        }
+ //
+ //        if(readIn == PACKET_STOP_EVENT) {
+ //          object->readCount = RingBuf_getCount(&object->ringBuffer);
+ //          object->readCallback(handle,
+ //                               object->readBuf,
+ //                               object->readCount);
+ //        }
+ //
+ //    }
+ //    DebugP_log2("UART:(%p) buffered '0x%02x'", hwAttrs->baseAddr,
+ //        (unsigned char) readIn);
+ //
+ //    return (ret);
+ // }
