@@ -142,39 +142,7 @@ void read_device_parameters(dev_id id, void * data) {
 
 void write_device_parameters(dev_id id, void * data) {
 
-  if(id == EPS_OBC_MON_DEV_ID ||
-     id == EPS_COMMS_MON_DEV_ID ||
-     id == EPS_ADCS_MON_DEV_ID ||
-     id == EPS_SU_MON_DEV_ID ||
-     id == EPS_DC_MON_DEV_ID ||
-     id == EPS_UR_MON_DEV_ID ||
-     id == SOL_YP_MON_DEV_ID ||
-     id == SOL_YM_MON_DEV_ID ||
-     id == SOL_XP_MON_DEV_ID ||
-     id == SOL_XM_MON_DEV_ID ) {
-
-       uint16_t temp_id = id - EPS_OBC_MON_DEV_ID;
-       ina_dev[temp_id].shunt = ((struct ina_device*)data)->shunt;
-       //ina_setShuntResistor(ina_dev[temp_id].id,
-       //                     ina_dev[temp_id].shunt);
-
-  } else if(id == SOL_YP_TEMP_DEV_ID ||
-            id == SOL_YM_TEMP_DEV_ID ||
-            id == SOL_XP_TEMP_DEV_ID ||
-            id == SOL_XM_TEMP_DEV_ID) {
-
-        uint16_t temp_id = id - SOL_YP_TEMP_DEV_ID;
-        tmp_dev[temp_id].resolution =
-                                         ((struct tmp_device*)data)->resolution;
-        //tmp_init(tmp_dev[temp_id].id,
-        //            &(tmp_dev[temp_id].mul),
-        //            tmp_dev[temp_id].resolution);
-
-  }  else if(id == BATT_CHARGE_DEV_ID) {
-
-    //ltc_code_to_voltage(id, uint16_t *voltage);
-
-  }  else if(id == EPS_FRAM_DEV_ID) {
+  if(id == OBC_FRAM_DEV_ID) {
 
      FRAM_write(id,
                 ((struct fram_device*)data)->address,
