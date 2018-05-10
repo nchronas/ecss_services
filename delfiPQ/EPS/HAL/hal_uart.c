@@ -120,7 +120,7 @@ void HAL_peripheral_open() {
   SPI_Params_init(&spiParams);
   spiParams.frameFormat = SPI_POL0_PHA0;
   spiParams.bitRate = 100000;
-  spi_fram = SPI_open(EPS_FRAM, &spiParams);
+  spi_fram = SPI_open(FRAM, &spiParams);
 
 }
 
