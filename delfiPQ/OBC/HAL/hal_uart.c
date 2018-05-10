@@ -29,35 +29,11 @@ void HAL_access_device_peripheral(dev_id id, void ** handle) {
 
 HAL_access_device_peripheral_meta(dev_id id, void *value) {
 
-  if(id == EPS_OBC_MON_DEV_ID) {
+  if(id == OBC_MON_DEV_ID) {
    *(uint8_t*)value = 0x40;
-  } else if(id == EPS_COMMS_MON_DEV_ID) {
-    *(uint8_t*)value = 0x41;
-  } else if(id == EPS_ADCS_MON_DEV_ID) {
-    *(uint8_t*)value = 0x42;
-  } else if(id == EPS_SU_MON_DEV_ID) {
-    *(uint8_t*)value = 0x43;
-  } else if(id == EPS_DC_MON_DEV_ID) {
+  } else if(id == OBC_TEMP_DEV_ID) {
     *(uint8_t*)value = 0x48;
-  } else if(id == EPS_UR_MON_DEV_ID) {
-    *(uint8_t*)value = 0x4A;
-  } else if(id == SOL_YP_TEMP_DEV_ID) {
-    *(uint8_t*)value = 0x4F;
-  } else if(id == SOL_YM_TEMP_DEV_ID) {
-    *(uint8_t*)value = 0x4D;
-  } else if(id == SOL_XM_TEMP_DEV_ID) {
-    *(uint8_t*)value = 0x49;
-  } else if(id == SOL_YP_MON_DEV_ID) {
-    *(uint8_t*)value = 0x40;
-  } else if(id == SOL_YM_MON_DEV_ID) {
-    *(uint8_t*)value = 0x41;
-  } else if(id == SOL_XP_MON_DEV_ID) {
-    *(uint8_t*)value = 0x42;
-  } else if(id == SOL_XM_MON_DEV_ID) {
-    *(uint8_t*)value = 0x43;
-  } else if(id == BATT_CHARGE_DEV_ID) {
-    *(uint8_t*)value = 0x64;
-  } else if(id == EPS_FRAM_DEV_ID) {
+  } else if(id == OBC_FRAM_DEV_ID) {
     *(Board_GPIOName*)value = FRAM_CS;
   }
 
