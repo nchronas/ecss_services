@@ -6,7 +6,7 @@
 #include "satellite_ids.h"
 #include "packet_services.h"
 
-#define SYSTEM_APP_ID _EPS_APP_ID_
+#define SYSTEM_APP_ID _OBC_APP_ID_
 
 SAT_returnState route_pkt(tc_tm_pkt *pkt);
 
