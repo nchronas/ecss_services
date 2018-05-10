@@ -23,21 +23,14 @@ SAT_returnState hk_report_parameters(HK_struct_id sid, tc_tm_pkt *pkt) {
 
         struct ina_device ina_dev;
 
-        //sol temp and inas
-        //ltc
+        read_device_parameters(OBC_MON_DEV_ID, &ina_dev);
 
-        //SOL_XM_MON_DEV_ID
-        for(uint8_t i=EPS_OBC_MON_DEV_ID; i <= EPS_UR_MON_DEV_ID; i++) {
-
-            read_device_parameters(i, &ina_dev);
-
-            cnv16_8(ina_dev.current,&pkt->data[size]);
-            size += 2;
-            cnv16_8(ina_dev.voltage,&pkt->data[size]);
-            size += 2;
-            cnv16_8(ina_dev.power,&pkt->data[size]);
-            size += 2;
-        }
+        cnv16_8(ina_dev.current,&pkt->data[size]);
+        size += 2;
+        cnv16_8(ina_dev.voltage,&pkt->data[size]);
+        size += 2;
+        cnv16_8(ina_dev.power,&pkt->data[size]);
+        size += 2;
 
         pkt->len = size;
     }
