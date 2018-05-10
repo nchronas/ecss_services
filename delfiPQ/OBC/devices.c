@@ -7,8 +7,8 @@
 #include "TMP100.h"
 #include "MB85RS256A.h"
 
-#define MAX_TMP_DEVS 4
 #define MAX_INA_DEVS 10
+#define MAX_TMP_DEVS 1
 
 static struct tmp_device tmp_dev[MAX_TMP_DEVS];
 static struct ina_device ina_dev[MAX_INA_DEVS];
@@ -20,7 +20,7 @@ void device_init() {
   uint8_t i;
 
   for(i = 0; i < MAX_TMP_DEVS; i++) {
-    tmp_dev[i].id = i + SOL_YP_TEMP_DEV_ID;
+    tmp_dev[i].id = i + OBC_TEMP_DEV_ID;
     tmp_dev[i].temp = 0;
     //get_atmos(par_id id, tmp_dev[i].temp);
     tmp_dev[i].resolution = TMP100_RESOLUTION_12_BIT;
@@ -84,17 +84,13 @@ void update_device(dev_id id) {
     ina_dev[pos_index].current = INA226_rawShuntCurrent( ina_dev[pos_index].current_raw, ina_dev[pos_index].currentLSB);
     ina_dev[pos_index].voltage = INA226_rawBusVoltage(ina_dev[pos_index].voltage_raw);
 
-  } else if(id == SOL_YP_TEMP_DEV_ID ||
-            id == SOL_YM_TEMP_DEV_ID ||
-            id == SOL_XP_TEMP_DEV_ID ||
-            id == SOL_XM_TEMP_DEV_ID) {
+  } else if(id == OBC_TEMP_DEV_ID) {
 
-     uint8_t pos_index = id - SOL_YP_TEMP_DEV_ID;
+    uint8_t pos_index = id - OBC_TEMP_DEV_ID;
 
-     tmp_getTemperature(id,
-                        tmp_dev[pos_index].mul,
-                        &tmp_dev[pos_index].temp);
-
+    tmp_getTemperature(id,
+                       tmp_dev[pos_index].mul,
+                       &tmp_dev[pos_index].temp);
 
 
   }
@@ -120,12 +116,8 @@ void read_device_parameters(dev_id id, void * data) {
     ((struct ina_device*)data)->current = ina_dev[pos_index].current;
     ((struct ina_device*)data)->voltage = ina_dev[pos_index].voltage;
 
-  } else if(id == SOL_YP_TEMP_DEV_ID ||
-            id == SOL_YM_TEMP_DEV_ID ||
-            id == SOL_XP_TEMP_DEV_ID ||
-            id == SOL_XM_TEMP_DEV_ID) {
+  } else if(id == OBC_TEMP_DEV_ID) {
 
-      uint8_t pos_index = id - SOL_YP_TEMP_DEV_ID;
       uint8_t pos_index = id - OBC_TEMP_DEV_ID;
 
     ((struct tmp_device*)data)->mul = tmp_dev[pos_index].mul;
