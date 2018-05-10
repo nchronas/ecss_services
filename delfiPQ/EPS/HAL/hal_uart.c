@@ -176,9 +176,6 @@ SAT_returnState HAL_I2C_readWrite(dev_id id,
 
 SAT_returnState HAL_uart_rx(dev_id id, uint8_t *buf, uint16_t *size) {
 
-    UART_Handle uart_pq9_bus;
-    HAL_access_device_peripheral(id, &uart_pq9_bus);
-
     UARTMSP432_Object *object = uart_pq9_bus->object;
 
     if(!C_ASSERT(buf != 0) == true) {
