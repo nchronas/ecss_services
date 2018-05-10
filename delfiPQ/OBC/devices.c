@@ -5,7 +5,6 @@
 
 #include "INA226.h"
 #include "TMP100.h"
-#include "LTC2942.h"
 #include "MB85RS256A.h"
 
 #define MAX_TMP_DEVS 4
@@ -13,7 +12,6 @@
 
 static struct tmp_device tmp_dev[MAX_TMP_DEVS];
 static struct ina_device ina_dev[MAX_INA_DEVS];
-//static struct ltc_device eps_ltc_device;
 
 void device_init() {
 
@@ -54,13 +52,6 @@ void device_init() {
                      &(ina_dev[i].powerLSB));
     usleep(10);
   }
-
-  //ltc_init(BATT_CHARGE_DEV_ID,
-  //         &(eps_ltc_device.property.R_sense),
-//           &(eps_ltc_device.property.M),
-//           eps_ltc_device.property.Q,
-//           eps_ltc_device.property.R,
-//           eps_ltc_device.property.I);
 
   FRAM_init(EPS_FRAM_DEV_ID);
 
@@ -105,9 +96,7 @@ void update_device(dev_id id) {
                         &tmp_dev[pos_index].temp);
 
 
-  }  else if(id == BATT_CHARGE_DEV_ID) {
 
-    //ltc_code_to_voltage(id, uint16_t *voltage);
   }
 
 }
@@ -140,10 +129,6 @@ void read_device_parameters(dev_id id, void * data) {
 
     ((struct tmp_device*)data)->mul = tmp_dev[pos_index].mul;
     ((struct tmp_device*)data)->temp = tmp_dev[pos_index].temp;
-
-  }  else if(id == BATT_CHARGE_DEV_ID) {
-
-    //ltc_code_to_voltage(id, uint16_t *voltage);
 
   }  else if(id == EPS_FRAM_DEV_ID) {
 
