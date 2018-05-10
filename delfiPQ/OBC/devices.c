@@ -1,4 +1,3 @@
-
 #include "devices.h"
 
 #include "hal_uart.h"
@@ -7,8 +6,8 @@
 #include "TMP100.h"
 #include "MB85RS256A.h"
 
-#define MAX_INA_DEVS 10
 #define MAX_TMP_DEVS 1
+#define MAX_INA_DEVS 1
 
 static struct tmp_device tmp_dev[MAX_TMP_DEVS];
 static struct ina_device ina_dev[MAX_INA_DEVS];
@@ -30,7 +29,7 @@ void device_init() {
   }
 
   for(i = 0; i < MAX_INA_DEVS; i++) {
-    ina_dev[i].id = i + EPS_OBC_MON_DEV_ID;
+    ina_dev[i].id = i + OBC_MON_DEV_ID;
     ina_dev[i].voltage = 0;
     ina_dev[i].current = 0;
     ina_dev[i].power = 0;
@@ -59,18 +58,9 @@ void device_init() {
 
 void update_device(dev_id id) {
 
-  if(id == EPS_OBC_MON_DEV_ID ||
-     id == EPS_COMMS_MON_DEV_ID ||
-     id == EPS_ADCS_MON_DEV_ID ||
-     id == EPS_SU_MON_DEV_ID ||
-     id == EPS_DC_MON_DEV_ID ||
-     id == EPS_UR_MON_DEV_ID ||
-     id == SOL_YP_MON_DEV_ID ||
-     id == SOL_YM_MON_DEV_ID ||
-     id == SOL_XP_MON_DEV_ID ||
-     id == SOL_XM_MON_DEV_ID ) {
+  if(id == OBC_MON_DEV_ID) {
 
-    uint8_t pos_index = id - EPS_OBC_MON_DEV_ID;
+    uint8_t pos_index = id - OBC_MON_DEV_ID;
 
     ina_dev[pos_index].current_raw = INA226_readShuntCurrent_raw(id);
     OSAL_sys_delay(1);
@@ -99,18 +89,9 @@ void update_device(dev_id id) {
 
 void read_device_parameters(dev_id id, void * data) {
 
-  if(id == EPS_OBC_MON_DEV_ID ||
-     id == EPS_COMMS_MON_DEV_ID ||
-     id == EPS_ADCS_MON_DEV_ID ||
-     id == EPS_SU_MON_DEV_ID ||
-     id == EPS_DC_MON_DEV_ID ||
-     id == EPS_UR_MON_DEV_ID ||
-     id == SOL_YP_MON_DEV_ID ||
-     id == SOL_YM_MON_DEV_ID ||
-     id == SOL_XP_MON_DEV_ID ||
-     id == SOL_XM_MON_DEV_ID ) {
+  if(id == OBC_MON_DEV_ID) {
 
-      uint8_t pos_index = id - EPS_OBC_MON_DEV_ID;
+      uint8_t pos_index = id - OBC_MON_DEV_ID;
 
     ((struct ina_device*)data)->power = ina_dev[pos_index].power;
     ((struct ina_device*)data)->current = ina_dev[pos_index].current;
