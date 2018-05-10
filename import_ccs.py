@@ -20,6 +20,9 @@ cmd = "git clone https://github.com/nchronas/EPS_software.git"
 pipe = subprocess.Popen(cmd, shell=True)
 pipe.wait()
 
+cmd = "git clone https://github.com/nchronas/OBC_software.git"
+pipe = subprocess.Popen(cmd, shell=True)
+pipe.wait()
 
 cmd = "git clone https://github.com/nchronas/INA226.git"
 pipe = subprocess.Popen(cmd, shell=True)
@@ -267,6 +270,122 @@ print path + "INA226"
 print path + "TMP100"
 print path + "MB85RS256A"
 print path + "LTC2942"
+
+
+
+print "Making OBC project"
+
+working_dir = path + "OBC_software"
+
+ecss_path = path + "ecss_services/"
+
+print "Creating folders"
+
+call(["mkdir", "libs"], cwd=working_dir)
+call(["mkdir", "ttc"], cwd=working_dir)
+
+print "Creating symlinks"
+
+folder = "OBC_software/ttc/"
+
+f = ecss_path + "delfiPQ/OBC/HAL/hal_uart.c"
+cmd = "ln -s " + f + " " + folder
+pipe = subprocess.Popen(cmd, shell=True)
+pipe.wait()
+
+f = ecss_path + "delfiPQ/OBC/devices.c"
+cmd = "ln -s " + f + " " + folder
+pipe = subprocess.Popen(cmd, shell=True)
+pipe.wait()
+
+f = ecss_path + "delfiPQ/OBC/housekeeping.c"
+cmd = "ln -s " + f + " " + folder
+pipe = subprocess.Popen(cmd, shell=True)
+pipe.wait()
+
+f = ecss_path + "delfiPQ/OBC/subsystem.c"
+cmd = "ln -s " + f + " " + folder
+pipe = subprocess.Popen(cmd, shell=True)
+pipe.wait()
+
+f = ecss_path + "delfiPQ/OSAL/osal.c"
+cmd = "ln -s " + f + " " + folder
+pipe = subprocess.Popen(cmd, shell=True)
+pipe.wait()
+
+f = ecss_path + "delfiPQ/packet_engine.c"
+cmd = "ln -s " + f + " " + folder
+pipe = subprocess.Popen(cmd, shell=True)
+pipe.wait()
+
+f = ecss_path + "delfiPQ/satellite.c"
+cmd = "ln -s " + f + " " + folder
+pipe = subprocess.Popen(cmd, shell=True)
+pipe.wait()
+
+
+f = ecss_path + "services/housekeeping_service.c"
+cmd = "ln -s " + f + " " + folder
+pipe = subprocess.Popen(cmd, shell=True)
+pipe.wait()
+
+f = ecss_path + "services/test_service.c"
+cmd = "ln -s " + f + " " + folder
+pipe = subprocess.Popen(cmd, shell=True)
+pipe.wait()
+
+
+f = ecss_path + "core/hldlc.c"
+cmd = "ln -s " + f + " " + folder
+pipe = subprocess.Popen(cmd, shell=True)
+pipe.wait()
+
+f = ecss_path + "core/packet_utilities.c"
+cmd = "ln -s " + f + " " + folder
+pipe = subprocess.Popen(cmd, shell=True)
+pipe.wait()
+
+f = ecss_path + "core/packet_services.c"
+cmd = "ln -s " + f + " " + folder
+pipe = subprocess.Popen(cmd, shell=True)
+pipe.wait()
+
+f = ecss_path + "core/pkt_pool.c"
+cmd = "ln -s " + f + " " + folder
+pipe = subprocess.Popen(cmd, shell=True)
+pipe.wait()
+
+f = ecss_path + "core/queue.c"
+cmd = "ln -s " + f + " " + folder
+pipe = subprocess.Popen(cmd, shell=True)
+pipe.wait()
+
+folder = "OBC_software/libs/"
+f = path + "TMP100/TMP100.c"
+cmd = "ln -s " + f + " " + folder
+pipe = subprocess.Popen(cmd, shell=True)
+pipe.wait()
+
+f = path + "INA226/INA226.c"
+cmd = "ln -s " + f + " " + folder
+pipe = subprocess.Popen(cmd, shell=True)
+pipe.wait()
+
+f = path + "MB85RS256A/MB85RS256A.c"
+cmd = "ln -s " + f + " " + folder
+pipe = subprocess.Popen(cmd, shell=True)
+pipe.wait()
+
+print "Input to ccs directories"
+print ecss_path + "delfiPQ/OBC"
+print ecss_path + "delfiPQ/OBC/HAL"
+print ecss_path + "delfiPQ/OSAL"
+print ecss_path + "delfiPQ"
+print ecss_path + "core"
+print ecss_path + "services"
+print path + "INA226"
+print path + "TMP100"
+print path + "MB85RS256A"
 
 #print "Install pyserial, you need to have pip"
 #pip.main(['install', "pyserial"])
