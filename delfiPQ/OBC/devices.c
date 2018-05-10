@@ -53,7 +53,7 @@ void device_init() {
     usleep(10);
   }
 
-  FRAM_init(EPS_FRAM_DEV_ID);
+  FRAM_init(OBC_FRAM_DEV_ID);
 
 }
 
@@ -126,11 +126,12 @@ void read_device_parameters(dev_id id, void * data) {
             id == SOL_XM_TEMP_DEV_ID) {
 
       uint8_t pos_index = id - SOL_YP_TEMP_DEV_ID;
+      uint8_t pos_index = id - OBC_TEMP_DEV_ID;
 
     ((struct tmp_device*)data)->mul = tmp_dev[pos_index].mul;
     ((struct tmp_device*)data)->temp = tmp_dev[pos_index].temp;
 
-  }  else if(id == EPS_FRAM_DEV_ID) {
+  }  else if(id == OBC_FRAM_DEV_ID) {
 
      FRAM_read(id,
                ((struct fram_device*)data)->address,
