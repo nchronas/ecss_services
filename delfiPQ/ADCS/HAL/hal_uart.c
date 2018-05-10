@@ -1,6 +1,6 @@
 #include "hal_uart.h"
 #include "packet_engine.h"
-#include "EPS_board.h"
+#include "OBC_board.h"
 #include <ti/drivers/SPI.h>
 #include <ti/drivers/UART.h>
 #include <ti/drivers/uart/UARTMSP432.h>
@@ -10,35 +10,21 @@
 static UART_Handle uart_pq9_bus;
 UART_Handle uart_dbg_bus;
 static I2C_Handle i2c_brd;
-static I2C_Handle i2c_batt;
-static I2C_Handle i2c_sol;
 static SPI_Handle spi_fram;
 
 void HAL_access_device_peripheral(dev_id id, void ** handle) {
 
-  if(id == EPS_BUS_DEV_ID) {
+  if(id == ADCS_BUS_DEV_ID) {
     *handle = &uart_pq9_bus;
-  } else if(id == EPS_DBG_DEV_ID) {
+  } else if(id == ADCS_DBG_DEV_ID) {
     //*handle = &uart_dbg_bus;
-  } else if(id == EPS_OBC_MON_DEV_ID ||
-            id == EPS_COMMS_MON_DEV_ID ||
-            id == EPS_ADCS_MON_DEV_ID ||
-            id == EPS_SU_MON_DEV_ID ||
-            id == EPS_DC_MON_DEV_ID ||
-            id == EPS_UR_MON_DEV_ID) {
+  } else if(id == ADCS_1_MON_DEV_ID ||
+            id == ADCS_2_MON_DEV_ID ||
+            id == ADCS_3_MON_DEV_ID ||
+            id == ADCS_TEMP_DEV_ID ||
+            id == ADCS_TEMP_DEV_ID ||) {
     *handle = &i2c_brd;
-  } else if(id == SOL_YP_TEMP_DEV_ID ||
-            id == SOL_YM_TEMP_DEV_ID ||
-            id == SOL_XP_TEMP_DEV_ID ||
-            id == SOL_XM_TEMP_DEV_ID ||
-            id == SOL_YP_MON_DEV_ID ||
-            id == SOL_YM_MON_DEV_ID ||
-            id == SOL_XP_MON_DEV_ID ||
-            id == SOL_XM_MON_DEV_ID) {
-    *handle = &i2c_sol;
-  } else if(id == BATT_CHARGE_DEV_ID) {
-    *handle = &i2c_batt;
-  } else if(id == EPS_FRAM_DEV_ID) {
+  } else if(id == ADCS_FRAM_DEV_ID) {
     *handle = &spi_fram;
   }
 
@@ -46,35 +32,17 @@ void HAL_access_device_peripheral(dev_id id, void ** handle) {
 
 HAL_access_device_peripheral_meta(dev_id id, void *value) {
 
-  if(id == EPS_OBC_MON_DEV_ID) {
-   *(uint8_t*)value = 0x40;
-  } else if(id == EPS_COMMS_MON_DEV_ID) {
-    *(uint8_t*)value = 0x41;
-  } else if(id == EPS_ADCS_MON_DEV_ID) {
-    *(uint8_t*)value = 0x42;
-  } else if(id == EPS_SU_MON_DEV_ID) {
-    *(uint8_t*)value = 0x43;
-  } else if(id == EPS_DC_MON_DEV_ID) {
-    *(uint8_t*)value = 0x48;
-  } else if(id == EPS_UR_MON_DEV_ID) {
-    *(uint8_t*)value = 0x4A;
-  } else if(id == SOL_YP_TEMP_DEV_ID) {
-    *(uint8_t*)value = 0x4F;
-  } else if(id == SOL_YM_TEMP_DEV_ID) {
-    *(uint8_t*)value = 0x4D;
-  } else if(id == SOL_XM_TEMP_DEV_ID) {
-    *(uint8_t*)value = 0x49;
-  } else if(id == SOL_YP_MON_DEV_ID) {
+  if(id == ADCS_1_MON_DEV_ID) {
     *(uint8_t*)value = 0x40;
-  } else if(id == SOL_YM_MON_DEV_ID) {
+  } else if(id == ADCS_2_MON_DEV_ID) {
     *(uint8_t*)value = 0x41;
-  } else if(id == SOL_XP_MON_DEV_ID) {
-    *(uint8_t*)value = 0x42;
-  } else if(id == SOL_XM_MON_DEV_ID) {
-    *(uint8_t*)value = 0x43;
-  } else if(id == BATT_CHARGE_DEV_ID) {
-    *(uint8_t*)value = 0x64;
-  } else if(id == EPS_FRAM_DEV_ID) {
+  } else if(id == ADCS_3_MON_DEV_ID) {
+    *(uint8_t*)value = 0x41;
+  } else if(id == ADCS_4_MON_DEV_ID) {
+    *(uint8_t*)value = 0x41;
+  } else if(id == ADCS_TEMP_DEV_ID) {
+    *(uint8_t*)value = 0x48;
+  } else if(id == ADCS_FRAM_DEV_ID) {
     *(Board_GPIOName*)value = FRAM_CS;
   }
 

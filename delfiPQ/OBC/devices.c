@@ -4,6 +4,7 @@
 
 #include "INA226.h"
 #include "TMP100.h"
+#include "MB85RS256A.h"
 
 #define MAX_TMP_DEVS 1
 #define MAX_INA_DEVS 1
@@ -18,7 +19,7 @@ void device_init() {
   uint8_t i;
 
   for(i = 0; i < MAX_TMP_DEVS; i++) {
-    tmp_dev[i].id = ADB_TEMP_DEV_ID;
+    tmp_dev[i].id = i + OBC_TEMP_DEV_ID;
     tmp_dev[i].temp = 0;
     //get_atmos(par_id id, tmp_dev[i].temp);
     tmp_dev[i].resolution = TMP100_RESOLUTION_12_BIT;
@@ -28,7 +29,7 @@ void device_init() {
   }
 
   for(i = 0; i < MAX_INA_DEVS; i++) {
-    ina_dev[i].id = i + ADB_MON_DEV_ID;
+    ina_dev[i].id = i + OBC_MON_DEV_ID;
     ina_dev[i].voltage = 0;
     ina_dev[i].current = 0;
     ina_dev[i].power = 0;
@@ -51,13 +52,15 @@ void device_init() {
     usleep(10);
   }
 
+  FRAM_init(OBC_FRAM_DEV_ID);
+
 }
 
 void update_device(dev_id id) {
 
-  if(id == ADB_MON_DEV_ID) {
+  if(id == OBC_MON_DEV_ID) {
 
-    uint8_t pos_index = id - ADB_MON_DEV_ID;
+    uint8_t pos_index = id - OBC_MON_DEV_ID;
 
     ina_dev[pos_index].current_raw = INA226_readShuntCurrent_raw(id);
     OSAL_sys_delay(1);
@@ -71,9 +74,9 @@ void update_device(dev_id id) {
     ina_dev[pos_index].current = INA226_rawShuntCurrent( ina_dev[pos_index].current_raw, ina_dev[pos_index].currentLSB);
     ina_dev[pos_index].voltage = INA226_rawBusVoltage(ina_dev[pos_index].voltage_raw);
 
-  } else if(id == ADB_TEMP_DEV_ID) {
+  } else if(id == OBC_TEMP_DEV_ID) {
 
-    uint8_t pos_index = id - ADB_TEMP_DEV_ID;
+    uint8_t pos_index = id - OBC_TEMP_DEV_ID;
 
     tmp_getTemperature(id,
                        tmp_dev[pos_index].mul,
@@ -86,25 +89,39 @@ void update_device(dev_id id) {
 
 void read_device_parameters(dev_id id, void * data) {
 
-  if(id == ADB_MON_DEV_ID) {
+  if(id == OBC_MON_DEV_ID) {
 
-      uint8_t pos_index = id - ADB_MON_DEV_ID;
+      uint8_t pos_index = id - OBC_MON_DEV_ID;
 
     ((struct ina_device*)data)->power = ina_dev[pos_index].power;
     ((struct ina_device*)data)->current = ina_dev[pos_index].current;
     ((struct ina_device*)data)->voltage = ina_dev[pos_index].voltage;
 
-  } else if(id == ADB_TEMP_DEV_ID) {
+  } else if(id == OBC_TEMP_DEV_ID) {
 
-      uint8_t pos_index = id - ADB_TEMP_DEV_ID;
+      uint8_t pos_index = id - OBC_TEMP_DEV_ID;
 
     ((struct tmp_device*)data)->mul = tmp_dev[pos_index].mul;
     ((struct tmp_device*)data)->temp = tmp_dev[pos_index].temp;
 
+  }  else if(id == OBC_FRAM_DEV_ID) {
+
+     FRAM_read(id,
+               ((struct fram_device*)data)->address,
+               ((struct fram_device*)data)->buffer,
+               ((struct fram_device*)data)->count);
   }
 
 }
 
 void write_device_parameters(dev_id id, void * data) {
+
+  if(id == OBC_FRAM_DEV_ID) {
+
+     FRAM_write(id,
+                ((struct fram_device*)data)->address,
+                ((struct fram_device*)data)->buffer,
+                ((struct fram_device*)data)->count);
+  }
 
 }
