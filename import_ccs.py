@@ -3,7 +3,7 @@
 import sys
 import subprocess
 from subprocess import call
-import pip
+#import pip
 
 #path = sys.argv[1:]
 path = "/Users/nchronas/Documents/repos/delfiPQ/workspace7/"

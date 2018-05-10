@@ -1,13 +1,13 @@
 #include "hal_uart.h"
 #include "packet_engine.h"
-#include "OBC_board.h"
+#include "ADCS_board.h"
 #include <ti/drivers/SPI.h>
 #include <ti/drivers/UART.h>
 #include <ti/drivers/uart/UARTMSP432.h>
 #include <ti/drivers/utils/RingBuf.h>
 #include <ti/drivers/I2C.h>
 
-static UART_Handle uart_pq9_bus;
+UART_Handle uart_pq9_bus;
 UART_Handle uart_dbg_bus;
 static I2C_Handle i2c_brd;
 static SPI_Handle spi_fram;
@@ -22,7 +22,7 @@ void HAL_access_device_peripheral(dev_id id, void ** handle) {
             id == ADCS_2_MON_DEV_ID ||
             id == ADCS_3_MON_DEV_ID ||
             id == ADCS_TEMP_DEV_ID ||
-            id == ADCS_TEMP_DEV_ID ||) {
+            id == ADCS_TEMP_DEV_ID) {
     *handle = &i2c_brd;
   } else if(id == ADCS_FRAM_DEV_ID) {
     *handle = &spi_fram;
@@ -80,15 +80,13 @@ void HAL_peripheral_open() {
   I2C_Params_init(&i2cParams);
   i2cParams.transferMode = I2C_MODE_BLOCKING;
   i2cParams.bitRate = I2C_100kHz;
-  i2c_brd = I2C_open(EPS_BRD, &i2cParams);
-  i2c_batt = I2C_open(EPS_BATT, &i2cParams);
-  i2c_sol = I2C_open(EPS_SOL, &i2cParams);
+  i2c_brd = I2C_open(I2C_MON, &i2cParams);
 
   /* Initialize SPI handle as default master */
   SPI_Params_init(&spiParams);
   spiParams.frameFormat = SPI_POL0_PHA0;
   spiParams.bitRate = 100000;
-  spi_fram = SPI_open(EPS_FRAM, &spiParams);
+  spi_fram = SPI_open(FRAM, &spiParams);
 
 }
 
