@@ -1,6 +1,6 @@
 #include "hal_uart.h"
 #include "packet_engine.h"
-#include "EPS_board.h"
+#include "OBC_board.h"
 #include <ti/drivers/SPI.h>
 #include <ti/drivers/UART.h>
 #include <ti/drivers/uart/UARTMSP432.h>
