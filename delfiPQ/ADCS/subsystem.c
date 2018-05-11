@@ -23,7 +23,7 @@ SAT_returnState route_pkt(tc_tm_pkt *pkt) {
 
     if(id == SYSTEM_APP_ID && pkt->ser_type == TC_TEST_SERVICE) {
         res = test_app(pkt);
-    } else if(id == SYSTEM_APP_ID && pkt->ser_type == TC_TEST_SERVICE) {
+    } else if(id == SYSTEM_APP_ID && pkt->ser_type == TC_HOUSEKEEPING_SERVICE) {
         res = hk_app(pkt);
     } else if(id != SYSTEM_APP_ID) {
         queuePush(pkt, 1);
