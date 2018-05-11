@@ -138,6 +138,16 @@ SAT_returnState unpack_pkt(const uint8_t *buf, tc_tm_pkt *pkt, const uint16_t si
         pkt->data[i] = buf[ECSS_DATA_OFFSET+i];
     }
 
+    // Unpack only packets that are with the subsystem id
+    TC_TM_app_id id;
+
+    if(pkt->type == TC)         { id = pkt->app_id; }
+    else if(pkt->type == TM)    { id = pkt->dest_id; }
+
+    if(id != SYSTEM_APP_ID) {
+        return SATR_NOT_SUBS_ID;
+    }
+
     return SATR_OK;
 }
 

@@ -115,8 +115,9 @@ typedef enum {
     SATR_INV_DATA_LEN          = 15,
     SATR_QUEUE_FULL            = 16,
     SATR_UNINIT                = 17,
+    SATR_NOT_SUBS_ID           = 18,
     /*LAST*/
-    SATR_LAST                  = 18
+    SATR_LAST                  = 19
 }SAT_returnState;
 
 typedef enum {
