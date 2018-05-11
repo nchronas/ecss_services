@@ -25,19 +25,19 @@ SAT_returnState hk_report_parameters(HK_struct_id sid, tc_tm_pkt *pkt) {
 
         read_device_parameters(ADB_MON_DEV_ID, &ina_dev);
 
-        cnv16_8(ina_dev.current,&pkt->data[size]);
+        cnv16_8(ina_dev.current_raw,&pkt->data[size]);
         size += 2;
-        cnv16_8(ina_dev.voltage,&pkt->data[size]);
+        cnv16_8(ina_dev.voltage_raw,&pkt->data[size]);
         size += 2;
-        cnv16_8(ina_dev.power,&pkt->data[size]);
+        cnv16_8(ina_dev.power_raw,&pkt->data[size]);
         size += 2;
 
         struct tmp_device tmp_dev;
 
         read_device_parameters(ADB_TEMP_DEV_ID, &tmp_dev);
 
-        cnv32_8(tmp_dev.temp,&pkt->data[size]);
-        size += 4;
+        cnv16_8(tmp_dev.raw_temp,&pkt->data[size]);
+        size += 2;
 
         pkt->len = size;
     }

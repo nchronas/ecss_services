@@ -31,11 +31,11 @@ SAT_returnState hk_report_parameters(HK_struct_id sid, tc_tm_pkt *pkt) {
 
             read_device_parameters(i, &ina_dev);
 
-            cnv16_8(ina_dev.current,&pkt->data[size]);
+            cnv16_8(ina_dev.current_raw,&pkt->data[size]);
             size += 2;
-            cnv16_8(ina_dev.voltage,&pkt->data[size]);
+            cnv16_8(ina_dev.voltage_raw,&pkt->data[size]);
             size += 2;
-            cnv16_8(ina_dev.power,&pkt->data[size]);
+            cnv16_8(ina_dev.power_raw,&pkt->data[size]);
             size += 2;
         }
 
