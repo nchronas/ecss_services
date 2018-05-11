@@ -143,7 +143,9 @@ void HAL_uart_tx(dev_id id, uint8_t *buf, uint16_t size) {
     return ;
   }
 
+  GPIO_write(PQ9_EN, 1);
   UART_write(uart_pq9_bus, buf, size);
+  GPIO_write(PQ9_EN, 0);
 }
 
 
