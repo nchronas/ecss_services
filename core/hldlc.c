@@ -22,25 +22,28 @@ SAT_returnState HLDLC_deframe(uint8_t *buf_in,
    // }
 
     for(uint16_t i = 0; i < size_in; i++) {
-        if(buf_in[i] == HLDLC_START_FLAG) {
+
+        uint8_t c = buf_in[i];
+
+        if(c == HLDLC_START_FLAG) {
             cnt = 0;
-        } else if(buf_in[i] == HLDLC_STOP_FLAG) {
+        } else if(c == HLDLC_STOP_FLAG) {
             *size_out = cnt;
             return SATR_EOT;
-        } else if(buf_in[i] == HLDLC_CONTROL_FLAG) {
+        } else if(c == HLDLC_CONTROL_FLAG) {
             i++;
 
-            if(buf_in[i] == 0x5E) {
+            if(c == 0x5E) {
               buf_out[cnt++] = 0x7E;
-            } else if(buf_in[i] == 0x5D) {
+            } else if(c == 0x5D) {
               buf_out[cnt++] = 0x7D;
-            } else if(buf_in[i] == 0x5C) {
+            } else if(c== 0x5C) {
               buf_out[cnt++] = 0x7C;
             } else {
               return SATR_ERROR;
             }
         } else {
-            buf_out[cnt++] = buf_in[i];
+            buf_out[cnt++] = c;
         }
 
         if(!C_ASSERT(cnt < MAX_HLDLC_PKT_SIZE - 1) == true) {
