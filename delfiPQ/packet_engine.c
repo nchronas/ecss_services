@@ -1,6 +1,7 @@
 #include "packet_engine.h"
 
 #include "packet_services.h"
+#include "hal_uart.h"
 
 struct _uart_data {
     uint8_t uart_buf[UART_BUF_SIZE];
@@ -18,10 +19,10 @@ SAT_returnState import_pkt() {
     uint16_t uart_size = 0;
     uint16_t hldlc_size = 0;
 
-    res_uart = HAL_uart_rx(ud.uart_buf, &uart_size);
+    res_uart = HAL_uart_rx(0, &ud.uart_buf, &uart_size);
     if( res_uart == SATR_EOT ) {
-        res_deframe = HLDLC_deframe(ud.uart_buf,
-                                    ud.uart_hdlc_buf,
+        res_deframe = HLDLC_deframe(&ud.uart_buf,
+                                    &ud.uart_hdlc_buf,
                                     uart_size,
                                     &hldlc_size);
     }
@@ -61,7 +62,7 @@ SAT_returnState export_pkt() {
 
     if(!C_ASSERT(size > 0) == true) { return SATR_ERROR; }
 
-    HAL_uart_tx( ud.uart_hdlc_buf, size);
+    HAL_uart_tx(0, &ud.uart_hdlc_buf, size);
 
     free_pkt(pkt);
 
