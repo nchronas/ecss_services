@@ -21,11 +21,8 @@ void device_init() {
   for(i = 0; i < MAX_TMP_DEVS; i++) {
     tmp_dev[i].id = ADCS_TEMP_DEV_ID;
     tmp_dev[i].temp = 0;
-    //get_atmos(par_id id, tmp_dev[i].temp);
-    tmp_dev[i].resolution = TMP100_RESOLUTION_12_BIT;
-    tmp_init(tmp_dev[i].id,
-               &(tmp_dev[i].mul),
-               tmp_dev[i].resolution);
+    tmp_dev[i].raw_temp = 0;
+    tmp_init(tmp_dev[i].id);
   }
 
   for(i = 0; i < MAX_INA_DEVS; i++) {
@@ -81,10 +78,8 @@ void update_device(dev_id id) {
 
     uint8_t pos_index = id - ADCS_TEMP_DEV_ID;
 
-    tmp_getTemperature(id,
-                       tmp_dev[pos_index].mul,
-                       &tmp_dev[pos_index].temp);
-
+    tmp_getTemperature_raw(id, &tmp_dev[pos_index].raw_temp);
+    tmp_getRawTemperature(id, &tmp_dev[pos_index].raw_temp, &tmp_dev[pos_index].temp);
 
   }
 
@@ -107,8 +102,8 @@ void read_device_parameters(dev_id id, void * data) {
 
       uint8_t pos_index = id - ADCS_TEMP_DEV_ID;
 
-    ((struct tmp_device*)data)->mul = tmp_dev[pos_index].mul;
-    ((struct tmp_device*)data)->temp = tmp_dev[pos_index].temp;
+     ((struct tmp_device*)data)->raw_temp = tmp_dev[pos_index].raw_temp;
+     ((struct tmp_device*)data)->temp = tmp_dev[pos_index].temp;
 
   }  else if(id == ADCS_FRAM_DEV_ID) {
 

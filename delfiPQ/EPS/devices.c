@@ -7,12 +7,13 @@
 #include "TMP100.h"
 #include "LTC2942.h"
 #include "MB85RS256A.h"
+#include "hal_uart.h"
 
 #define MAX_TMP_DEVS 4
 #define MAX_INA_DEVS 10
 
-static struct tmp_device tmp_dev[MAX_TMP_DEVS];
-static struct ina_device ina_dev[MAX_INA_DEVS];
+struct tmp_device tmp_dev[MAX_TMP_DEVS];
+struct ina_device ina_dev[MAX_INA_DEVS];
 //static struct ltc_device eps_ltc_device;
 
 void device_init() {
@@ -24,11 +25,8 @@ void device_init() {
   for(i = 0; i < MAX_TMP_DEVS; i++) {
     tmp_dev[i].id = i + SOL_YP_TEMP_DEV_ID;
     tmp_dev[i].temp = 0;
-    //get_atmos(par_id id, tmp_dev[i].temp);
-    tmp_dev[i].resolution = TMP100_RESOLUTION_12_BIT;
-    tmp_init(tmp_dev[i].id,
-               &(tmp_dev[i].mul),
-               tmp_dev[i].resolution);
+    tmp_dev[i].raw_temp = 0;
+    tmp_init(tmp_dev[i].id);
   }
 
   for(i = 0; i < MAX_INA_DEVS; i++) {
@@ -100,10 +98,8 @@ void update_device(dev_id id) {
 
      uint8_t pos_index = id - SOL_YP_TEMP_DEV_ID;
 
-     tmp_getTemperature(id,
-                        tmp_dev[pos_index].mul,
-                        &tmp_dev[pos_index].temp);
-
+     tmp_getTemperature_raw(id, &tmp_dev[pos_index].raw_temp);
+     tmp_getRawTemperature(id, &tmp_dev[pos_index].raw_temp, &tmp_dev[pos_index].temp);
 
   }  else if(id == BATT_CHARGE_DEV_ID) {
 
@@ -138,8 +134,8 @@ void read_device_parameters(dev_id id, void * data) {
 
       uint8_t pos_index = id - SOL_YP_TEMP_DEV_ID;
 
-    ((struct tmp_device*)data)->mul = tmp_dev[pos_index].mul;
-    ((struct tmp_device*)data)->temp = tmp_dev[pos_index].temp;
+     ((struct tmp_device*)data)->raw_temp = tmp_dev[pos_index].raw_temp;
+     ((struct tmp_device*)data)->temp = tmp_dev[pos_index].temp;
 
   }  else if(id == BATT_CHARGE_DEV_ID) {
 
@@ -179,8 +175,7 @@ void write_device_parameters(dev_id id, void * data) {
             id == SOL_XM_TEMP_DEV_ID) {
 
         uint16_t temp_id = id - SOL_YP_TEMP_DEV_ID;
-        tmp_dev[temp_id].resolution =
-                                         ((struct tmp_device*)data)->resolution;
+
         //tmp_init(tmp_dev[temp_id].id,
         //            &(tmp_dev[temp_id].mul),
         //            tmp_dev[temp_id].resolution);

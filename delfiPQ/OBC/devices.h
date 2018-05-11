@@ -20,9 +20,8 @@ struct ina_device {
 
 struct tmp_device {
   dev_id id;
-  uint8_t resolution;
-  int32_t temp;
-  uint16_t mul;
+  float temp;
+  int16_t raw_temp;
 };
 
 struct fram_device {
