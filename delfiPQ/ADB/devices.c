@@ -90,6 +90,11 @@ void read_device_parameters(dev_id id, void * data) {
     ((struct ina_device*)data)->current = ina_dev[pos_index].current;
     ((struct ina_device*)data)->voltage = ina_dev[pos_index].voltage;
 
+    ((struct ina_device*)data)->power_raw = ina_dev[pos_index].power_raw;
+    ((struct ina_device*)data)->current_raw = ina_dev[pos_index].current_raw;
+    ((struct ina_device*)data)->voltage_raw = ina_dev[pos_index].voltage_raw;
+
+
   } else if(id == ADB_TEMP_DEV_ID) {
 
       uint8_t pos_index = id - ADB_TEMP_DEV_ID;
