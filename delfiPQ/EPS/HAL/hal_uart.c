@@ -7,12 +7,12 @@
 #include <ti/drivers/utils/RingBuf.h>
 #include <ti/drivers/I2C.h>
 
-static UART_Handle uart_pq9_bus;
+UART_Handle uart_pq9_bus;
 UART_Handle uart_dbg_bus;
-static I2C_Handle i2c_brd;
-static I2C_Handle i2c_batt;
-static I2C_Handle i2c_sol;
-static SPI_Handle spi_fram;
+I2C_Handle i2c_brd;
+I2C_Handle i2c_batt;
+I2C_Handle i2c_sol;
+SPI_Handle spi_fram;
 
 void HAL_access_device_peripheral(dev_id id, void ** handle) {
 

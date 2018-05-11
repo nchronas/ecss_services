@@ -9,8 +9,8 @@
 
 UART_Handle uart_pq9_bus;
 UART_Handle uart_dbg_bus;
-static I2C_Handle i2c_brd;
-static SPI_Handle spi_fram;
+I2C_Handle i2c_brd;
+SPI_Handle spi_fram;
 
 void HAL_access_device_peripheral(dev_id id, void ** handle) {
 
