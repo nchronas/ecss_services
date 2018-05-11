@@ -40,6 +40,12 @@ HAL_access_device_peripheral_meta(dev_id id, void *value) {
 
 }
 
+void temp(UART_Handle handle, void *buf, size_t count) {
+    UARTMSP432_Object *object = handle->object;
+    int i = 0;
+    i++;
+    i = object->readCount;
+}
 
 void HAL_peripheral_open() {
 
@@ -56,7 +62,7 @@ void HAL_peripheral_open() {
   uartParams.readReturnMode = UART_RETURN_FULL;
   uartParams.readEcho = UART_ECHO_OFF;
   uartParams.baudRate = 9600;
-  //uartParams.readCallback = &temp;
+  uartParams.readCallback = &temp;
   uart_pq9_bus = UART_open(PQ9, &uartParams);
 
   UART_Params_init(&uartParams);
@@ -166,9 +172,6 @@ SAT_returnState HAL_uart_rx(dev_id id, uint8_t *buf, uint16_t *size) {
 }
 
 void HAL_uart_tx(dev_id id, uint8_t *buf, uint16_t size) {
-
-  UART_Handle uart_pq9_bus;
-  HAL_access_device_peripheral(id, &uart_pq9_bus);
 
   if(!C_ASSERT(buf != NULL) == true) {
     return ;
