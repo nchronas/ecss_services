@@ -197,7 +197,9 @@ void HAL_uart_tx(dev_id id, uint8_t *buf, uint16_t size) {
  *     replace readIsrBinaryCallback with
  *     readIsrModBinaryCallback
  *
- *   Build using make in the ti/simplelink_msp432p4_sdk_2_10_00_14/source/ti/drivers
+ *   Build using xdctools gmake in the ti/simplelink_msp432p4_sdk_2_10_00_14/source/ti/drivers
+ *   e.g.  cd /Users/nchronas/ti/simplelink_msp432p4_sdk_2_10_00_14/source/ti/drivers/
+ *         /Applications/ti/xdctools_3_50_05_12_core/gmake
  */
 
  // #define PACKET_STOP_EVENT 0x7C
